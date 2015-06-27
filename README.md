@@ -132,6 +132,8 @@ zebra与我的另一个开源项目module内在集成在一起，使用module和
 	
 zebra会将相对路径转化为绝对路径
 
+详情可参见我的module开源项目
+
 
 # TODO土豆
 
