@@ -21,9 +21,9 @@ zebra{[斑马]是一个简单易用的前端构建工具，是我多年前端开
 
 
 #用法
-1 安装 nodejs，[https://nodejs.org/]https://nodejs.org/
+1. 安装 nodejs，https://nodejs.org/
 
-2 新建zebra-config.json, 放在项目根目录下，配置文件如下：
+2. 新建zebra-config.json, 放在项目根目录下，配置文件如下：
 
 	{
 		"base": "./src",  //代码根目录
@@ -61,9 +61,9 @@ zebra{[斑马]是一个简单易用的前端构建工具，是我多年前端开
 		}
 	}
 
-3 将zebra.js拷贝到项目根目录下
+3. 将zebra.js拷贝到项目根目录下
 
-4 在项目根目录下运行命令
+4. 在项目根目录下运行命令
 
 	node zebra.js
 	
@@ -129,6 +129,6 @@ zebra会将相对路径转化为绝对路径
 
 # TODO土豆
 
-1 增加css压缩
-2 增量构建
-3 css sprite自动构建
+1. 增加css压缩
+2. 增量构建
+3. css sprite自动构建
