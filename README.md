@@ -29,48 +29,48 @@ zebra[斑马] 是一个简单易用的前端构建工具，是我多年前端开
 
 2. 新建zebra-config.json, 放在项目根目录下，配置文件如下：
 
-	{
-		"base": "./src",  //代码根目录
-		"output": "./static",   //输出目录
-		"rules": {
-			"js": {
-				"compile": true,  //编译js
-				"uglify": false,  //uglify压缩
-				"copy": true,     //文件拷贝
-				"pack": {         //文件合并打包
-					"xmeet.base.js": [
-						"_.js",
-						"TweenMax.min.js"
-					],
-					"xmeet.api.js": [
-						"api.js",
-						"md5.js",
-						"SocketChat.js",
-						"ChatWindow.js"
-					]
+		{
+			"base": "./src",  //代码根目录
+			"output": "./static",   //输出目录
+			"rules": {
+				"js": {
+					"compile": true,  //编译js
+					"uglify": false,  //uglify压缩
+					"copy": true,     //文件拷贝
+					"pack": {         //文件合并打包
+						"xmeet.base.js": [
+							"_.js",
+							"TweenMax.min.js"
+						],
+						"xmeet.api.js": [
+							"api.js",
+							"md5.js",
+							"SocketChat.js",
+							"ChatWindow.js"
+						]
+					}
+				}
+				"css": {
+					"copy": true
+				},
+				"image": {
+					"copy": true
+				},
+				"html": {
+					"copy": true
+				},
+				"font": {
+					"copy": true
 				}
 			}
-			"css": {
-				"copy": true
-			},
-			"image": {
-				"copy": true
-			},
-			"html": {
-				"copy": true
-			},
-			"font": {
-				"copy": true
-			}
 		}
-	}
 	
 
 3. 将zebra.js拷贝到项目根目录下
 
 4. 在项目根目录下运行命令
 
-	node zebra.js
+		node zebra.js
 	
 zebra[斑马]就开始监听js文件的改变，自动构建
 
