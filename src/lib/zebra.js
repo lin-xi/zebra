@@ -151,7 +151,6 @@ function doPack() {
             writeFile(outFile, outData, 'utf-8');
         }
     }
-    doWatch();
 }
 
 function preproccessCss(path) {
@@ -227,7 +226,7 @@ function watchDir(path) {
         watchTimer = setTimeout(function () {
             traverse(srcPath, 0);
             //handleFile(path + '/' + file, 0);
-        }, 500);
+        }, 1000);
     });
 }
 
@@ -239,6 +238,10 @@ function doWatch() {
 }
 
 setup();
+
+setTimeout(function () {
+    doWatch();
+}, 1500);
 
 /*-------------------------------------------------*/
 var uglify = {};
