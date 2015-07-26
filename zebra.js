@@ -166,12 +166,18 @@ function doPack(readyFile) {
                 writeFile(outFile, outData, 'utf-8');
                 console.log('> Pack [' + outFile + ']');
             }
-			done();
+            done();
             doWatch();
         }
-    }else{
-		done();
-	}
+    } else {
+        if (watchTimer) {
+            clearTimeout(watchTimer);
+        }
+        watchTimer = setTimeout(function () {
+            done();
+            doWatch();
+        }, 3000);
+    }
 }
 
 function preproccessCss(path) {
@@ -247,9 +253,9 @@ function setup() {
     traverse(srcPath, 0);
 }
 
-function done(){
-	var time = (new Date()-startTime)/1000;
-	console.log('[done] ' + time + 's');
+function done() {
+    var time = (new Date() - startTime) / 1000;
+    console.log('[done] ' + time + 's');
 }
 
 function watchDir(path) {
