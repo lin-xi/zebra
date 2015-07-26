@@ -91,7 +91,7 @@ function relative2absolute(path, base) {
 function preproccessJs(path) {
     var jsData = fs.readFileSync(path, "utf-8");
     var relativeOutPath = outPath.replace(basePath, ''), // /build
-        relativePath = path.replace(srcPath, '').slice(1), // /build/dust/..
+        relativePath = path.replace(srcPath, ''), // /build/dust/..
         relativeDir = getDirName(path).replace(srcPath, ''); // /dust/...
     var outFile = outPath + relativePath;
 
@@ -140,10 +140,10 @@ function doPack(readyFile) {
     if (js.pack) {
         var allready = true;
         for (var p in js.pack) {
-            var outFile = outPath + p;
+            var outFile = outPath + '/' + p;
             var files = js.pack[p];
             var notReady = files.some(function (item, idx) {
-                var filePath = outPath + item;
+                var filePath = outPath + '/' + item;
                 if (!packFiles[filePath]) {
                     return true;
                 }
@@ -154,11 +154,11 @@ function doPack(readyFile) {
         }
         if (allready) {
             for (var p in js.pack) {
-                var outFile = outPath + p;
+                var outFile = outPath + '/' + p;
                 var files = js.pack[p];
                 var packTemp = [];
                 files.forEach(function (item, idx) {
-                    var filePath = outPath + item;
+                    var filePath = outPath + '/' + item;
                     packTemp.push(fs.readFileSync(filePath, "utf-8"));
                     fs.unlinkSync(filePath);
                 });
@@ -249,26 +249,29 @@ function setup() {
     getConfig();
     srcPath = relative2absolute(config.base, basePath);
     outPath = relative2absolute(config.output, basePath);
-
+    if (outPath.slice(-1) == '/' || outPath.slice(-1) == '\\') {
+        outPath = outPath.slice(0, -1);
+    }
     traverse(srcPath, 0);
 }
 
 function done() {
     var time = (new Date() - startTime) / 1000;
     console.log('[done] ' + time + 's');
+    startTime = new Date();
 }
 
 function watchDir(path) {
     fs.watch(path, {
         persistent: true
     }, function (type, file) {
-        console.log('>>', path + '/' + file);
         if (watchTimer) {
             clearTimeout(watchTimer);
         }
         watchTimer = setTimeout(function () {
-            traverse(srcPath, 0);
-            //handleFile(path + '/' + file, 0);
+            console.log('>>', path + '/' + file);
+            // traverse(srcPath, 0);
+            handleFile(path + '/' + file, 0);
         }, 500);
     });
 }
