@@ -1,21 +1,29 @@
 {
-	"base": "./src",
-	"output": "./",
+	"base": "./output/tmp",
+	"output": "./output/mobile-lbc",
 	"rules": {
 		"js": {
-			"compile": true,
+			"compile": false,
 			"uglify": false,
-			"copy": true,
-			"pack": {
-				"xmeet.api.js": [
-					"_.js",
-					"api.js",
-					"TweenMax.min.js",
-					"md5.js",
-					"SocketChat.js",
-					"ChatWindow.js"
-				]
+			"md5": {
+				"exclude": []
 			}
+		},
+		"css": {
+			"compress": true,
+			"md5": {
+				"exclude": []
+			}
+		},
+		"image": {},
+		"other": {
+			"copy": true
 		}
-	}
+	},
+	"deploy": [{
+		"receiver": "http://cq02-map-sv-control04.cq02.baidu.com:8890/receiver.php",
+		"from": "./output/mobile-lbc",
+		"to": "/home/map/odp_crm/webroot/mobile-lbc",
+		"exclude": "svn|rar|psd|docx"
+	}]
 }
