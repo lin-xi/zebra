@@ -1,4 +1,3 @@
-var _ = {};
 var TEXT_FILE_EXTS = [
         'css', 'tpl', 'js', 'php',
         'txt', 'json', 'xml', 'htm',
@@ -84,9 +83,9 @@ var folders = [],
         pack: {}
     };
 var startTime = new Date();
-var watchFlag = false;
+var watchTimer, watchFlag = false;
 
-var runStack = ['traverse', 'jsPack', 'cssPack', 'html', 'watch', 'release'];
+var runStack = ['traverse', 'jsPack', 'cssPack', 'html', 'release', 'watch'];
 var queue;
 var _ = {};
 
@@ -135,6 +134,10 @@ function setup() {
     outPath = relative2absolute(config.output, basePath);
     if (outPath.slice(-1) == '/' || outPath.slice(-1) == '\\') {
         outPath = outPath.slice(0, -1);
+    }
+    if (config.clean) {
+        deleteFolder(outPath);
+        fs.mkdirSync(outPath);
     }
     queue = runStack.slice(0);
     run();
@@ -298,12 +301,39 @@ function runHtml() {
             });
         }
 
+        //资源列表
+        if (rule.html.resourceMap) {
+            data = data.replace(/<\/head>/, function () {
+                var json = {};
+                if (md5Files['js']) {
+                    var temp = md5Files['js'];
+                    for (var file in temp) {
+                        json[file] = temp[file];
+                    }
+                }
+                return '<script type="text/javascript">var resourceMap=' + JSON.stringify(json) + '</script></head>';
+            });
+        }
+
         writeFile(outFile, data, 'utf-8');
     }
 }
 
 function runWatch() {
-
+    var args = process.argv.slice(2);
+    var cmd = args[0];
+    if (cmd) {
+        cmd = cmd.slice(1);
+        if (args[0] == '-w' && folders.length > 0) {
+            if (!watchFlag) {
+                folders.forEach(function (item, index) {
+                    watchDir(item);
+                });
+                console.log('[watch]...');
+                watchFlag = true;
+            }
+        }
+    }
 }
 
 function runRelease() {
@@ -315,6 +345,22 @@ function runRelease() {
             doUpload();
         }
     }
+}
+
+function watchDir(path) {
+    fs.watch(path, {
+        persistent: true
+    }, function (type, file) {
+        if (watchTimer) {
+            clearTimeout(watchTimer);
+        }
+        watchTimer = setTimeout(function () {
+            console.log('>>', path + '/' + file);
+            // traverse(srcPath, 0);
+            queue = ['traverse', 'jsPack', 'cssPack', 'html', 'release'];
+            run();
+        }, 700);
+    });
 }
 
 function getNewMd5Name(path) {
@@ -504,19 +550,18 @@ function done() {
     startTime = new Date();
 }
 
-function watchDir(path) {
-    fs.watch(path, {
-        persistent: true
-    }, function (type, file) {
-        if (watchTimer) {
-            clearTimeout(watchTimer);
-        }
-        watchTimer = setTimeout(function () {
-            console.log('>>', path + '/' + file);
-            // traverse(srcPath, 0);
-            handleFile(path + '/' + file, 0);
-        }, 700);
-    });
+function deleteFolder(path) {
+    if (fs.existsSync(path)) {
+        fs.readdirSync(path).forEach(function (file, index) {
+            var curPath = path + "/" + file;
+            if (fs.lstatSync(curPath).isDirectory()) { // recurse
+                deleteFolder(curPath);
+            } else { // delete file
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(path);
+    }
 }
 
 function doWatch() {

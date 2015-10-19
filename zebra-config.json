@@ -1,6 +1,6 @@
 {
-	"base": "./output/tmp",
-	"output": "./output/mobile-lbc",
+	"base": "./src",
+	"output": "./static",
 	"rules": {
 		"js": {
 			"compile": false,
@@ -15,6 +15,9 @@
 				"exclude": []
 			}
 		},
+		"html": {
+			"resourceMap": true
+		},
 		"image": {},
 		"other": {
 			"copy": true
@@ -22,8 +25,9 @@
 	},
 	"deploy": [{
 		"receiver": "http://cq02-map-sv-control04.cq02.baidu.com:8890/receiver.php",
-		"from": "./output/mobile-lbc",
-		"to": "/home/map/odp_crm/webroot/mobile-lbc",
+		"from": "./static",
+		"to": "/home/map/odp_crm/webroot/mobile-framework",
 		"exclude": "svn|rar|psd|docx"
-	}]
+	}],
+	"clean": true
 }
