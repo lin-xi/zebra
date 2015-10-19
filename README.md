@@ -3,7 +3,7 @@ zebra
 
 ![zebra](./zebra.gif)
 
-zebra[斑马] 是一个简单易用的前端构建工具，是我多年前端开发构建经验的得力表达之作。
+zebra[斑马] 是一个简单易用的前端构建工具。
 
 优点：
 
@@ -15,13 +15,12 @@ zebra[斑马] 是一个简单易用的前端构建工具，是我多年前端开
 
 + 解决js模板问题
 + 内置uglify，js压缩混淆
++ css压缩
 + js打包合并
 + 自动监听js修改，重新构建
 + 相对路径转化为绝对路径
 
 **欢迎大家使用，提意见提需求报八哥。**
-
-**斑马，跑起来吧！**
 
 
 #用法
@@ -30,39 +29,37 @@ zebra[斑马] 是一个简单易用的前端构建工具，是我多年前端开
 2. 新建zebra-config.json, 放在项目根目录下，配置文件如下：
 
 		{
-			"base": "./src",  //代码根目录
-			"output": "./static",   //输出目录
+			"base": "./src",
+			"output": "./static",
 			"rules": {
 				"js": {
-					"compile": true,  //编译js
-					"uglify": false,  //uglify压缩
-					"copy": true,     //文件拷贝
-					"pack": {         //文件合并打包
-						"xmeet.base.js": [
-							"_.js",
-							"TweenMax.min.js"
-						],
-						"xmeet.api.js": [
-							"api.js",
-							"md5.js",
-							"SocketChat.js",
-							"ChatWindow.js"
-						]
+					"compile": false,
+					"uglify": false,
+					"md5": {
+						"exclude": []
 					}
-				}
-				"css": {
-					"copy": true
 				},
-				"image": {
-					"copy": true
+				"css": {
+					"compress": true,
+					"md5": {
+						"exclude": []
+					}
 				},
 				"html": {
-					"copy": true
+					"resourceMap": true
 				},
-				"font": {
+				"image": {},
+				"other": {
 					"copy": true
 				}
-			}
+			},
+			"deploy": [{
+				"receiver": "http://cq02-map-sv-control04.cq02.baidu.com:8890/receiver.php",
+				"from": "./static",
+				"to": "/home/map/odp_crm/webroot/mobile-framework",
+				"exclude": "svn|rar|psd|docx"
+			}],
+			"clean": true
 		}
 	
 
@@ -70,7 +67,7 @@ zebra[斑马] 是一个简单易用的前端构建工具，是我多年前端开
 
 4. 在项目根目录下运行命令
 
-		node zebra.js
+		node zebra.js -w
 	
 zebra[斑马]就开始监听js文件的改变，自动构建
 
@@ -100,6 +97,7 @@ zebra[斑马]就开始监听js文件的改变，自动构建
 zebra编译之后，生成的内容如下：
 
 	var tpl="<div class=\"xmeet-chat-logo\">\n	<img width=\"48\" height=\"48\" src=\"http://meet.xpro.im/v2/api/img/chat.png\"/>\n</div>\n"
+	
 	
 ##js压缩
 
@@ -137,8 +135,5 @@ zebra会将相对路径转化为绝对路径
 
 # TODO土豆
 
-1. 增加css压缩
+1. 增量md5,只把改成的文件重新生成MD5
 
-2. 增量构建
-
-3. css sprite自动构建
